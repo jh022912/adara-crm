@@ -1,8 +1,5 @@
 import { sheets } from 'googleapis/build/src/apis/sheets/index.js';
 import { google } from 'googleapis';
-import { authenticate } from '@google-cloud/local-auth';
-import fs from 'fs';
-import path from 'path';
 
 let authClient = null;
 
