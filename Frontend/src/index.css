@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Georgia, serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Georgia, serif;
+  font-weight: 600;
+}
+
+button {
+  font-family: Georgia, serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+input, textarea, select {
+  font-family: Georgia, serif;
+}
