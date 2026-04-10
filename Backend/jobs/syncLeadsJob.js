@@ -47,6 +47,9 @@ export const syncLeadsFromGoogleSheets = async () => {
     for (const row of rows) {
       const leadData = parseLeadRow(row);
 
+      // Skip test leads and rows with no phone
+      if (leadData.isTestLead || !leadData.phone) continue;
+
       // Check if lead with this phone already exists
       const existingLead = await getLeadByPhone(leadData.phone);
 
