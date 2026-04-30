@@ -57,6 +57,10 @@ export const getGoogleSheetsData = async () => {
     });
 
     const rows = response.data.values || [];
+    if (rows.length > 0) {
+      console.log('Header row:', JSON.stringify(rows[0]));
+      if (rows[1]) console.log('First data row:', JSON.stringify(rows[1]));
+    }
     return rows.slice(1); // Skip header row
   } catch (error) {
     console.error('Error fetching Google Sheets data:', error);
