@@ -44,17 +44,24 @@ export const syncLeadsFromGoogleSheets = async () => {
     const defaultCompany = companies[0];
     let newLeadsCount = 0;
 
+    console.log(`Total rows from sheet: ${rows.length}`);
+
     for (const row of rows) {
       const leadData = parseLeadRow(row);
 
       // Skip test leads and rows with no phone
-      if (leadData.isTestLead || !leadData.phone) continue;
+      if (leadData.isTestLead || !leadData.phone) {
+        console.log(`Skipping row - test lead: ${leadData.isTestLead}, phone: "${leadData.phone}"`);
+        continue;
+      }
+
+      console.log(`Processing lead: ${leadData.name}, phone: ${leadData.phone}`);
 
       // Check if lead with this phone already exists
       const existingLead = await getLeadByPhone(leadData.phone);
 
       if (!existingLead) {
-        // Create new lead
+        console.log(`Creating new lead: ${leadData.name}`);
         try {
           await createLead(
             defaultCompany.id,
@@ -67,6 +74,8 @@ export const syncLeadsFromGoogleSheets = async () => {
         } catch (error) {
           console.error(`Error creating lead for phone ${leadData.phone}:`, error);
         }
+      } else {
+        console.log(`Lead already exists for phone: ${leadData.phone}`);
       }
     }
 
