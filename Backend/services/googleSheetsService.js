@@ -53,7 +53,7 @@ export const getGoogleSheetsData = async () => {
 
     const response = await sheetsAPI.spreadsheets.values.get({
       spreadsheetId,
-      range: 'Sheet1!A:T', // All columns up to lead_status
+      range: 'Leads!A:T', // All columns up to lead_status
     });
 
     const rows = response.data.values || [];
