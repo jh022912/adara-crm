@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getLeads, syncLeads } from '../api/leadService.js';
+import { getLeads, syncLeads, getSheetStats } from '../api/leadService.js';
 import { getCompany } from '../api/companyService.js';
 import { LeadTable } from '../components/LeadTable.jsx';
 import { LeadModal } from '../components/LeadModal.jsx';
@@ -17,16 +17,19 @@ export const CompanyLeadsPage = () => {
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [syncLoading, setSyncLoading] = useState(false);
+  const [stats, setStats] = useState({ contractValue: '0', adSpend: '0', commission: '0' });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [companyData, leadsData] = await Promise.all([
+        const [companyData, leadsData, statsData] = await Promise.all([
           getCompany(companyId),
           getLeads(companyId),
+          getSheetStats(),
         ]);
         setCompany(companyData);
         setLeads(leadsData);
+        setStats(statsData);
       } catch (err) {
         setError(err.error || 'Failed to load data');
       } finally {
@@ -90,6 +93,21 @@ export const CompanyLeadsPage = () => {
             {error}
           </div>
         )}
+
+        <div className="grid grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-darkNavy">
+            <p className="text-sm font-serif text-gray-500 mb-1">Total Contract Value</p>
+            <p className="text-3xl font-serif font-bold text-darkNavy">{stats.contractValue}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-navy">
+            <p className="text-sm font-serif text-gray-500 mb-1">Total Ad Spend</p>
+            <p className="text-3xl font-serif font-bold text-darkNavy">{stats.adSpend}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-gray-400">
+            <p className="text-sm font-serif text-gray-500 mb-1">Total Commission</p>
+            <p className="text-3xl font-serif font-bold text-darkNavy">{stats.commission}</p>
+          </div>
+        </div>
 
         <div className="flex justify-between items-center mb-8">
           <div>

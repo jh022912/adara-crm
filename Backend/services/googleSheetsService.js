@@ -68,6 +68,33 @@ export const getGoogleSheetsData = async () => {
   }
 };
 
+export const getSheetStats = async () => {
+  try {
+    if (!authClient) {
+      await initializeGoogleAuth();
+    }
+    if (!authClient) throw new Error('Google authentication not initialized');
+
+    const sheetsAPI = google.sheets({ version: 'v4', auth: authClient });
+    const spreadsheetId = process.env.GOOGLE_SHEETS_ID;
+
+    const response = await sheetsAPI.spreadsheets.values.batchGet({
+      spreadsheetId,
+      ranges: ['Leads!W2', 'Leads!AA2', 'Leads!AB2'],
+    });
+
+    const ranges = response.data.valueRanges || [];
+    const contractValue = ranges[0]?.values?.[0]?.[0] || '0';
+    const adSpend = ranges[1]?.values?.[0]?.[0] || '0';
+    const commission = ranges[2]?.values?.[0]?.[0] || '0';
+
+    return { contractValue, adSpend, commission };
+  } catch (error) {
+    console.error('Error fetching sheet stats:', error);
+    return { contractValue: '0', adSpend: '0', commission: '0' };
+  }
+};
+
 export const parseLeadRow = (row) => {
   // Column mapping based on sheet structure:
   // A(0)=id, B(1)=created_time, C(2)=ad_id, D(3)=ad_name, E(4)=adset_id,

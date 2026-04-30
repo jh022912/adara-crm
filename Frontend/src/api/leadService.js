@@ -64,3 +64,12 @@ export const syncLeads = async () => {
     throw error.response?.data || { error: 'Failed to sync leads' };
   }
 };
+
+export const getSheetStats = async () => {
+  try {
+    const response = await api.get('/sync/stats');
+    return response.data;
+  } catch (error) {
+    return { contractValue: '0', adSpend: '0', commission: '0' };
+  }
+};
